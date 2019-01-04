@@ -1,0 +1,20 @@
+{
+  "name": "dingqing/chatroom",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "dingqing",
+      "email": "442367569@qq.com"
+    }
+  ],
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Chatroom\\": "src/"
+    }
+  },
+  "require-dev": {
+  }
+}
