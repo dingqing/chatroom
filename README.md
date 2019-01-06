@@ -1,8 +1,7 @@
 # chatroom
 基于Swoole实现简易聊天室
 
-## 参考
-<a href="https://wiki.swoole.com/" target="_blank">Swoole文档</a>
+参考：[Swoole文档](https://wiki.swoole.com/)
 
 ## 安装
 ### 环境要求
