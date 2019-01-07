@@ -44,6 +44,7 @@ var chatroom = {
                     chatroom.removeUser(data.user.fd);
                     chatroom.notice(data.message);
                     break;
+                //新用户进入
                 case 'openSuccess':
                     chatroom.data.info = data.user;
                     chatroom.showAllUser(data.all);
@@ -90,7 +91,7 @@ var chatroom = {
             + '<div class="username pull-right">' + this.data.info.name + '</div>'
             + '<div>'
             + '<div class="col-xs-12 no-padding">'
-            + '<div class="label label-success pull-right">' + msg + '</div>'
+            + '<div class="msg msg-self pull-right">' + msg + '</div>'
             + '</div>'
             + '</div>';
 
@@ -136,7 +137,11 @@ var chatroom = {
         if ($(".fd-" + fd).length > 0) {
             return true;
         }
-        var html = ' <div class="list-group-item user-item fd-' + fd + '">'
+        var userItemHtmlClass = '';
+        if (this.data.info.fd == fd){
+            userItemHtmlClass = 'self';
+        }
+        var html = ' <div class="list-group-item user-item '+userItemHtmlClass+' fd-' + fd + '">'
             + '<div class="avatar">'
             + '<img src="' + avatar + '" width="50" height="50" class="img-circle">'
             + '</div>'

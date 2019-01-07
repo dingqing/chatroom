@@ -19,7 +19,7 @@ class WebSocket
     }
 
     /**
-     * 启动
+     * 启动。注册事件。
      */
     public function run()
     {
@@ -38,17 +38,23 @@ class WebSocket
      */
     public function open(Server $server, $request)
     {
+        //生成随机用户，并添进table中
+        $users = $this->config['chatroom']['users'];
+        $randUserKey = array_rand($users);
+        
         $user = [
             'fd' => $request->fd,
-            'name' => $this->config['chatroom']['name'][array_rand($this->config['chatroom']['name'])],
-            'avatar' => $this->config['chatroom']['avatar'][array_rand($this->config['chatroom']['avatar'])]
+            'name' => $users[$randUserKey],
+            'avatar' => $randUserKey
         ];
         $this->table->set($request->fd, $user);
 
+        //向自己推送所有用户信息
         $server->push($request->fd, json_encode(
                 array_merge(['user' => $user], ['all' => $this->allUser()], ['type' => 'openSuccess'])
             )
         );
+        //向别人推送系统消息
         $this->pushMessage($server, "欢迎" . $user['name'] . "进入聊天室", 'open', $request->fd);
     }
 
@@ -62,6 +68,7 @@ class WebSocket
     }
 
     /**
+     * 收到客户端数据时
      * @param Server $server
      * @param $frame
      */
@@ -69,7 +76,6 @@ class WebSocket
     {
         $this->pushMessage($server, $frame->data, 'message', $frame->fd);
     }
-
 
     /**
      * @param Server $server
@@ -84,19 +90,21 @@ class WebSocket
 
     /**
      * 遍历发送消息
+     * 对象：除了$excludedFd
+     * 内容：$excludedFd写的消息
      *
      * @param Server $server
      * @param $message
      * @param $messageType
-     * @param int $skip
+     * @param int $excludedFd
      */
-    private function pushMessage(Server $server, $message, $messageType, $frameFd)
+    private function pushMessage(Server $server, $message, $messageType, $excludedFd)
     {
         $message = htmlspecialchars($message);
         $datetime = date('Y-m-d H:i:s', time());
-        $user = $this->table->get($frameFd);
+        $user = $this->table->get($excludedFd);
         foreach ($this->table as $row) {
-            if ($frameFd == $row['fd']) {
+            if ($excludedFd == $row['fd']) {
                 continue;
             }
             $server->push($row['fd'], json_encode([
