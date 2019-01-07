@@ -24,12 +24,12 @@ var chatroom = {
     },
     open: function () {
         this.data.wsServer.onopen = function (evt) {
-            chatroom.notice('连接成功');
+            chatroom.notice('连接成功','success');
         }
     },
     close: function () {
         this.data.wsServer.onclose = function (evt) {
-            chatroom.notice('不妙，链接断开了');
+            chatroom.notice('不妙，链接断开了','danger');
         }
     },
     messages: function () {
@@ -38,11 +38,11 @@ var chatroom = {
             switch (data.type) {
                 case 'open':
                     chatroom.appendUser(data.user.name, data.user.avatar, data.user.fd);
-                    chatroom.notice(data.message);
+                    chatroom.notice(data.message,'primary');
                     break;
                 case 'close':
                     chatroom.removeUser(data.user.fd);
-                    chatroom.notice(data.message);
+                    chatroom.notice(data.message,'muted');
                     break;
                 //新用户进入
                 case 'openSuccess':
@@ -127,8 +127,8 @@ var chatroom = {
     scrollBottom: function () {
         $('.chat-list').scrollTop($('.chat-list')[0].scrollHeight);
     },
-    notice: function (msg) {
-        var html = '<div class="col-xs-12 text-muted text-center">' + msg + '</div>';
+    notice: function (msg, type) {
+        var html = '<div class="col-xs-12 text-center text-'+type+'">' + msg + '</div>';
         $('.chat-list').append(html);
 
         this.scrollBottom();

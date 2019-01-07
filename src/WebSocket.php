@@ -55,7 +55,7 @@ class WebSocket
             )
         );
         //向别人推送系统消息
-        $this->pushMessage($server, "欢迎" . $user['name'] . "进入聊天室", 'open', $request->fd);
+        $this->pushMessage($server, "欢迎 " . $user['name'] . " 进入聊天室", 'open', $request->fd);
     }
 
     private function allUser()
@@ -84,7 +84,7 @@ class WebSocket
     public function close(Server $server, $fd)
     {
         $user = $this->table->get($fd);
-        $this->pushMessage($server, $user['name'] . "离开聊天室", 'close', $fd);
+        $this->pushMessage($server, $user['name'] . " 离开聊天室", 'close', $fd);
         $this->table->del($fd);
     }
 

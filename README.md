@@ -19,3 +19,4 @@
     cd ./public
     php -S localhost:8000
     ```
+- 打开多个浏览器/标签页，分别访问 [localhost:8000](localhost:8000)，假装多人在聊天
